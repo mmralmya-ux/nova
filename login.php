@@ -10,19 +10,19 @@ if (isLoggedIn()) {
 }
 
 $errors = [];
-$email_value = '';
+$identifier_value = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = clean($_POST['email'] ?? '');
+    $identifier = clean($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
-    $email_value = $email;
+    $identifier_value = $identifier;
     
-    if (!isValidEmail($email)) $errors['email'] = 'البريد الإلكتروني غير صحيح';
+    if ($identifier === '') $errors['email'] = 'أدخل البريد الإلكتروني أو الاسم الكامل';
     if (empty($password)) $errors['password'] = 'كلمة المرور مطلوبة';
     
     if (empty($errors)) {
-        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-        $stmt->execute([$email]);
+        $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ? OR full_name = ? LIMIT 1");
+        $stmt->execute([$identifier, $identifier]);
         $user = $stmt->fetch();
         
         if (!$user) {
@@ -61,9 +61,9 @@ require_once 'includes/header.php';
 
         <form method="POST" novalidate>
             <div class="form-group <?= isset($errors['email']) ? 'error' : '' ?>">
-                <label class="form-label">البريد الإلكتروني</label>
-                <input type="email" name="email" class="form-input" dir="ltr"
-                       value="<?= htmlspecialchars($email_value) ?>" required>
+                <label class="form-label">البريد الإلكتروني أو الاسم الكامل</label>
+                <input type="text" name="email" class="form-input"
+                       value="<?= htmlspecialchars($identifier_value) ?>" required>
                 <div class="form-error"><?= $errors['email'] ?? '' ?></div>
             </div>
 
