@@ -18,6 +18,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $gender = $_POST['gender'] ?? 'male';
     $birthdate = $_POST['birthdate'] ?? null;
     $password = $_POST['password'] ?? '';
+    $image = $user['image'] ?? null;
+    if (!empty($_FILES['image']['name'])) {
+        $uploadedImage = uploadImage($_FILES['image'], __DIR__ . '/uploads/users/');
+        if ($uploadedImage) $image = $uploadedImage;
+        else $errors['image'] = 'الصورة غير صالحة أو تتجاوز 2MB';
+    }
     
     if (mb_strlen($full_name) < 3) $errors['full_name'] = 'الاسم قصير جداً';
     
@@ -27,14 +33,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['password'] = 'كلمة المرور يجب أن تكون 8 أحرف';
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=?, password=? WHERE id=?");
-                $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $hash, $user['id']]);
+                $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=?, image=?, password=? WHERE id=?");
+                $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $image, $hash, $user['id']]);
             }
         }
         
         if (empty($errors)) {
-            $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=? WHERE id=?");
-            $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $user['id']]);
+            $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=?, image=? WHERE id=?");
+            $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $image, $user['id']]);
             
             $_SESSION['user_name'] = $full_name;
             setFlash('success', '✅ تم حفظ التغييرات بنجاح');
@@ -62,7 +68,13 @@ require_once 'includes/header.php';
             <h2 style="margin-bottom:8px">👤 الملف الشخصي</h2>
             <p style="color:var(--text-2);margin-bottom:24px">عدّل بياناتك الشخصية</p>
 
-            <form method="POST" style="max-width:560px">
+            <form method="POST" enctype="multipart/form-data" style="max-width:560px">
+                <div class="form-group <?= isset($errors['image']) ? 'error' : '' ?>">
+                    <label class="form-label">صورة الملف الشخصي</label>
+                    <input type="file" name="image" class="form-input" accept="image/jpeg,image/png,image/webp">
+                    <small style="color:var(--muted)">JPG أو PNG أو WEBP — الحد الأقصى 2MB</small>
+                    <div class="form-error"><?= $errors['image'] ?? '' ?></div>
+                </div>
                 <div class="form-group <?= isset($errors['full_name']) ? 'error' : '' ?>">
                     <label class="form-label">الاسم الكامل</label>
                     <input type="text" name="full_name" class="form-input" 

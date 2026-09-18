@@ -34,6 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $level = $_POST['level'] ?? 'beginner';
     $seats = (int)($_POST['seats'] ?? 30);
     $id = (int)($_POST['id'] ?? 0);
+    $image = null;
     
     if (empty($title)) $errors[] = 'العنوان مطلوب';
     if (empty($description)) $errors[] = 'الوصف مطلوب';
@@ -41,12 +42,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     
     if (empty($errors)) {
         if ($id > 0) {
-            $stmt = $pdo->prepare("UPDATE courses SET title=?, description=?, category_id=?, instructor_id=?, price=?, duration_hours=?, level=?, seats=? WHERE id=?");
-            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $id]);
+            $current = $pdo->prepare("SELECT image FROM courses WHERE id=?");
+            $current->execute([$id]);
+            $image = $current->fetchColumn();
+            if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
+            $stmt = $pdo->prepare("UPDATE courses SET title=?, description=?, category_id=?, instructor_id=?, price=?, duration_hours=?, level=?, seats=?, image=? WHERE id=?");
+            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $id]);
             setFlash('success', 'تم تحديث الدورة');
         } else {
-            $stmt = $pdo->prepare("INSERT INTO courses (title, description, category_id, instructor_id, price, duration_hours, level, seats) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats]);
+            if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
+            $stmt = $pdo->prepare("INSERT INTO courses (title, description, category_id, instructor_id, price, duration_hours, level, seats, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image]);
             setFlash('success', 'تم إضافة الدورة');
         }
         redirect(SITE_URL . '/admin/courses.php');
@@ -74,7 +80,7 @@ require_once 'includes/header.php';
 
 <div class="card" style="margin-bottom:24px">
     <h2 style="margin-bottom:18px"><?= $editing ? '✏️ تعديل دورة' : '➕ إضافة دورة جديدة' ?></h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $editing['id'] ?? 0 ?>">
         
         <div class="grid grid-2">
@@ -123,6 +129,11 @@ require_once 'includes/header.php';
             <div class="form-group">
                 <label class="form-label">عدد المقاعد</label>
                 <input type="number" name="seats" class="form-input" value="<?= $editing['seats'] ?? '30' ?>">
+            </div>
+            <div class="form-group">
+                <label class="form-label">صورة الدورة</label>
+                <input type="file" name="image" class="form-input" accept="image/jpeg,image/png,image/webp">
+                <small style="color:var(--muted)">JPG أو PNG أو WEBP — الحد الأقصى 2MB</small>
             </div>
         </div>
         
