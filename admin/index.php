@@ -18,31 +18,24 @@ $pageTitle = 'لوحة التحكم';
 require_once 'includes/header.php';
 ?>
 
-<div class="grid grid-4" style="margin-bottom:30px">
-    <div class="stat">
-        <div class="num"><?= $stats['users'] ?></div>
-        <div class="lbl">المستخدمون</div>
-    </div>
-    <div class="stat">
-        <div class="num"><?= $stats['courses'] ?></div>
-        <div class="lbl">الدورات</div>
-    </div>
-    <div class="stat">
-        <div class="num"><?= $stats['enrollments'] ?></div>
-        <div class="lbl">التسجيلات</div>
-    </div>
-    <div class="stat">
-        <div class="num"><?= $stats['messages'] ?></div>
-        <div class="lbl">رسائل جديدة</div>
-    </div>
+<div class="admin-welcome">
+    <div><h2>مرحباً بك في لوحة الإدارة</h2><p>تحكم في محتوى NOVA وتابع نشاط المنصة من مكان واحد.</p></div>
+    <a href="<?= SITE_URL ?>/index.php" class="btn">عرض الموقع ↗</a>
+</div>
+
+<div class="admin-stats">
+    <div class="admin-stat" style="--stat-soft:#e3fafc;--stat-color:#087f8c"><div class="admin-stat-head"><span>المستخدمون</span><span class="admin-stat-icon">♙</span></div><strong class="admin-stat-number"><?= $stats['users'] ?></strong></div>
+    <div class="admin-stat" style="--stat-soft:#fff4e6;--stat-color:#e67700"><div class="admin-stat-head"><span>الدورات</span><span class="admin-stat-icon">▤</span></div><strong class="admin-stat-number"><?= $stats['courses'] ?></strong></div>
+    <div class="admin-stat" style="--stat-soft:#ebfbee;--stat-color:#2b8a3e"><div class="admin-stat-head"><span>التسجيلات</span><span class="admin-stat-icon">✓</span></div><strong class="admin-stat-number"><?= $stats['enrollments'] ?></strong></div>
+    <div class="admin-stat" style="--stat-soft:#f3f0ff;--stat-color:#6741d9"><div class="admin-stat-head"><span>رسائل جديدة</span><span class="admin-stat-icon">✉</span></div><strong class="admin-stat-number"><?= $stats['messages'] ?></strong></div>
 </div>
 
 <div class="card">
-    <h2 style="margin-bottom:16px">⚡ إجراءات سريعة</h2>
-    <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <a href="courses.php" class="btn btn-primary">📚 إدارة الدورات</a>
-        <a href="users.php" class="btn btn-outline">👥 إدارة المستخدمين</a>
-        <a href="messages.php" class="btn btn-outline">📧 الرسائل</a>
+    <h2>إجراءات سريعة</h2>
+    <div class="admin-actions">
+        <a href="courses.php" class="admin-action"><span class="admin-action-icon">▤</span><span>إدارة الدورات</span></a>
+        <a href="users.php" class="admin-action"><span class="admin-action-icon">♙</span><span>إدارة المستخدمين</span></a>
+        <a href="messages.php" class="admin-action"><span class="admin-action-icon">✉</span><span>مراجعة الرسائل</span></a>
     </div>
 </div>
 

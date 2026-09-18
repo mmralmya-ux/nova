@@ -11,6 +11,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 <title><?= $pageTitle ?? 'لوحة التحكم — ' . SITE_NAME ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/admin.css">
 <style>
 .admin-layout{display:grid;grid-template-columns:250px 1fr;min-height:100vh}
 .admin-side{background:var(--grad-dark);color:#fff;padding:24px 16px;position:sticky;top:0;height:100vh;overflow-y:auto}
@@ -27,23 +28,26 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 
 <div class="admin-layout">
     <aside class="admin-side">
-        <h2>⚙️ لوحة التحكم</h2>
-        <a href="<?= SITE_URL ?>/admin/index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>">📊 الرئيسية</a>
-        <a href="<?= SITE_URL ?>/admin/users.php" class="<?= $currentPage === 'users' ? 'active' : '' ?>">👥 المستخدمون</a>
-        <a href="<?= SITE_URL ?>/admin/courses.php" class="<?= $currentPage === 'courses' ? 'active' : '' ?>">📚 الدورات</a>
-        <a href="<?= SITE_URL ?>/admin/categories.php" class="<?= $currentPage === 'categories' ? 'active' : '' ?>">📁 التصنيفات</a>
-        <a href="<?= SITE_URL ?>/admin/instructors.php" class="<?= $currentPage === 'instructors' ? 'active' : '' ?>">👨‍🏫 المدربون</a>
-        <a href="<?= SITE_URL ?>/admin/enrollments.php" class="<?= $currentPage === 'enrollments' ? 'active' : '' ?>">✍️ التسجيلات</a>
-        <a href="<?= SITE_URL ?>/admin/messages.php" class="<?= $currentPage === 'messages' ? 'active' : '' ?>">📧 الرسائل</a>
-        <hr style="border:none;border-top:1px solid rgba(255,255,255,.15);margin:14px 8px">
-        <a href="<?= SITE_URL ?>/index.php">🏠 الموقع</a>
-        <a href="<?= SITE_URL ?>/logout.php" style="color:#fca5a5">🚪 خروج</a>
+        <div class="admin-brand"><span class="admin-brand-mark">N</span><div><strong>NOVA Admin</strong><small>إدارة المعهد التدريبي</small></div></div>
+        <div class="admin-section-label">القائمة الرئيسية</div>
+        <nav>
+        <a href="<?= SITE_URL ?>/admin/index.php" class="<?= $currentPage === 'index' ? 'active' : '' ?>"><span class="nav-icon">▦</span>الرئيسية</a>
+        <a href="<?= SITE_URL ?>/admin/users.php" class="<?= $currentPage === 'users' ? 'active' : '' ?>"><span class="nav-icon">♙</span>المستخدمون</a>
+        <a href="<?= SITE_URL ?>/admin/courses.php" class="<?= $currentPage === 'courses' ? 'active' : '' ?>"><span class="nav-icon">▤</span>الدورات</a>
+        <a href="<?= SITE_URL ?>/admin/categories.php" class="<?= $currentPage === 'categories' ? 'active' : '' ?>"><span class="nav-icon">⌘</span>التصنيفات</a>
+        <a href="<?= SITE_URL ?>/admin/instructors.php" class="<?= $currentPage === 'instructors' ? 'active' : '' ?>"><span class="nav-icon">♟</span>المدربون</a>
+        <a href="<?= SITE_URL ?>/admin/enrollments.php" class="<?= $currentPage === 'enrollments' ? 'active' : '' ?>"><span class="nav-icon">✓</span>التسجيلات</a>
+        <a href="<?= SITE_URL ?>/admin/messages.php" class="<?= $currentPage === 'messages' ? 'active' : '' ?>"><span class="nav-icon">✉</span>الرسائل</a>
+        </nav>
+        <hr class="side-separator">
+        <a href="<?= SITE_URL ?>/index.php"><span class="nav-icon">⌂</span>زيارة الموقع</a>
+        <a href="<?= SITE_URL ?>/logout.php" class="side-exit"><span class="nav-icon">⇥</span>تسجيل الخروج</a>
     </aside>
 
     <main class="admin-main">
         <div class="admin-top">
             <h1><?= $pageTitle ?? 'لوحة التحكم' ?></h1>
-            <div>👤 <?= $_SESSION['user_name'] ?? '' ?></div>
+            <div class="admin-user"><span class="admin-user-avatar">N</span><span><?= htmlspecialchars($_SESSION['user_name'] ?? 'المشرف') ?></span></div>
         </div>
 
         <?php if ($flash): ?>
