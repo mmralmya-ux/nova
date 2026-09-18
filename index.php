@@ -23,13 +23,17 @@ require_once 'includes/header.php';
 
     <!-- HERO -->
     <div class="hero">
-        <h1>مرحباً بك في معهد NOVA التدريبي</h1>
-        <p>منصة تعليمية عربية حديثة، توفر دورات تدريبية في مختلف المجالات بمعايير عالمية.</p>
+        <div style="font-weight:800;letter-spacing:1px;opacity:.82;margin-bottom:10px">تعلّم بوضوح، وتطوّر بثقة</div>
+        <h1>مستقبلك يبدأ بخطوة تعليمية صحيحة</h1>
+        <p>دورات عربية عملية، محتوى واضح، وتجربة تعليمية مصممة لتساعدك على اكتساب مهارات حقيقية.</p>
         <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
             <a href="courses.php" class="btn btn-lg" style="background:#fff;color:var(--primary)">🔍 تصفح الدورات</a>
             <?php if (!isLoggedIn()): ?>
                 <a href="register.php" class="btn btn-lg btn-outline">✨ إنشاء حساب</a>
             <?php endif; ?>
+        </div>
+        <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:28px;font-size:.86rem;opacity:.84">
+            <span>✓ مسارات عملية</span><span>✓ تعلّم مرن</span><span>✓ مجتمع داعم</span>
         </div>
     </div>
 
