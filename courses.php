@@ -40,20 +40,20 @@ $pageTitle = 'الدورات — ' . SITE_NAME;
 require_once 'includes/header.php';
 ?>
 
-<div class="container">
-    <h1 style="font-size:2rem;font-weight:900;margin-bottom:8px">الدورات التدريبية</h1>
-    <p style="color:var(--text-2);margin-bottom:26px">اختر من بين <?= count($courses) ?> دورة متاحة</p>
+<div class="container courses-page">
+    <div class="page-heading"><div><span class="eyebrow">NOVA ACADEMY</span><h1>الدورات التدريبية</h1><p>اكتشف مسارك القادم وتعلم بمرونة مع دورات عملية.</p></div><div class="result-count"><strong><?= count($courses) ?></strong><span>دورة متاحة</span></div></div>
 
     <!-- الفلاتر -->
-    <div class="card" style="margin-bottom:30px;padding:20px">
-        <form method="GET" style="display:flex;gap:12px;flex-wrap:wrap;align-items:end">
-            <div style="flex:1;min-width:220px">
-                <label class="form-label">ابحث</label>
-                <input type="text" name="search" class="form-input" value="<?= $search ?>" placeholder="اكتب اسم الدورة...">
+    <div class="course-toolbar">
+        <form method="GET" class="course-filter-form">
+            <div class="search-field">
+                <label class="form-label" for="course-search">ابحث عن دورة</label>
+                <span class="search-icon">⌕</span>
+                <input id="course-search" type="search" name="search" class="form-input" value="<?= htmlspecialchars($search) ?>" placeholder="مثال: تطوير الويب، UX...">
             </div>
-            <div style="flex:1;min-width:180px">
-                <label class="form-label">التصنيف</label>
-                <select name="category" class="form-select">
+            <div class="category-field">
+                <label class="form-label" for="course-category">التصنيف</label>
+                <select id="course-category" name="category" class="form-select">
                     <option value="0">كل التصنيفات</option>
                     <?php foreach ($categories as $cat): ?>
                         <option value="<?= $cat['id'] ?>" <?= $category == $cat['id'] ? 'selected' : '' ?>>
@@ -62,8 +62,7 @@ require_once 'includes/header.php';
                     <?php endforeach; ?>
                 </select>
             </div>
-            <button type="submit" class="btn btn-primary">🔍 بحث</button>
-            <a href="courses.php" class="btn btn-outline">↺ إعادة</a>
+            <div class="filter-actions"><button type="submit" class="btn btn-primary">بحث عن دورة</button><a href="courses.php" class="btn btn-outline">إعادة ضبط</a></div>
         </form>
     </div>
 
