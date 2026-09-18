@@ -20,7 +20,7 @@ define('DB_NAME', getenv('NOVA_DB_NAME') ?: 'nova_db');
 // إعدادات الموقع
 // ─────────────────────────────────────────
 define('SITE_NAME', 'معهد NOVA التدريبي');
-define('SITE_URL', getenv('NOVA_SITE_URL') ?: 'https://novaalop.infy.click');
+define('SITE_URL', getenv('NOVA_SITE_URL') ?: 'http://107.149.48.3');
 define('SITE_EMAIL', 'info@nova.com');
 
 // ─────────────────────────────────────────
