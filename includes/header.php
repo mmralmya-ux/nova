@@ -9,7 +9,7 @@ $flash = getFlash();
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><?= $pageTitle ?? SITE_NAME ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css?v=20260919-1909">
 </head>
 <body>
 
