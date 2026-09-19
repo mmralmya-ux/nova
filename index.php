@@ -5,86 +5,35 @@ require_once 'includes/db.php';
 require_once 'includes/functions.php';
 require_once 'includes/auth.php';
 
-// آخر 6 دورات
-$stmt = $pdo->query("SELECT c.*, cat.name AS cat_name FROM courses c 
-                     LEFT JOIN categories cat ON cat.id = c.category_id 
-                     WHERE c.is_active = 1 ORDER BY c.id DESC LIMIT 6");
-$courses = $stmt->fetchAll();
-
-// التصنيفات
-$stmt = $pdo->query("SELECT * FROM categories LIMIT 4");
-$categories = $stmt->fetchAll();
-
-$pageTitle = 'الرئيسية — ' . SITE_NAME;
+$courses = $pdo->query("SELECT c.*, cat.name AS cat_name FROM courses c LEFT JOIN categories cat ON cat.id = c.category_id WHERE c.is_active = 1 ORDER BY c.id DESC LIMIT 6")->fetchAll();
+$categories = $pdo->query("SELECT * FROM categories LIMIT 4")->fetchAll();
+$pageTitle = 'تعلّم بذكاء — ' . SITE_NAME;
 require_once 'includes/header.php';
 ?>
 
-<div class="container">
-
-    <!-- HERO -->
-    <div class="hero">
-        <div style="font-weight:800;letter-spacing:1px;opacity:.82;margin-bottom:10px">تعلّم بوضوح، وتطوّر بثقة</div>
-        <h1>مستقبلك يبدأ بخطوة تعليمية صحيحة</h1>
-        <p>دورات عربية عملية، محتوى واضح، وتجربة تعليمية مصممة لتساعدك على اكتساب مهارات حقيقية.</p>
-        <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
-            <a href="courses.php" class="btn btn-lg" style="background:#fff;color:var(--primary)">🔍 تصفح الدورات</a>
-            <?php if (!isLoggedIn()): ?>
-                <a href="register.php" class="btn btn-lg btn-outline">✨ إنشاء حساب</a>
-            <?php endif; ?>
+<div class="nova-home">
+    <section class="nova-hero container">
+        <div class="hero-copy">
+            <span class="hero-kicker"><i></i> منصة تعلم عربية بطموح عالمي</span>
+            <h1>المهارة التي تبحث عنها<br><em>تبدأ من هنا.</em></h1>
+            <p>تعلّم من دورات عملية صُممت لتمنحك معرفة قابلة للتطبيق، وتبني لك مستقبلاً أقوى خطوة بعد خطوة.</p>
+            <div class="hero-cta"><a href="courses.php" class="btn btn-primary btn-lg">استكشف الدورات <span>←</span></a><?php if (!isLoggedIn()): ?><a href="register.php" class="hero-link">ابدأ مجاناً <span>↗</span></a><?php endif; ?></div>
+            <div class="hero-proof"><div class="avatar-stack"><b>ن</b><b>م</b><b>س</b></div><span><strong>+1,200</strong> متعلم بدأ رحلته معنا</span></div>
         </div>
-        <div style="display:flex;justify-content:center;gap:24px;flex-wrap:wrap;margin-top:28px;font-size:.86rem;opacity:.84">
-            <span>✓ مسارات عملية</span><span>✓ تعلّم مرن</span><span>✓ مجتمع داعم</span>
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-glow"></div><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+            <div class="learning-card"><div class="learning-icon">✦</div><small>مسارك التعليمي</small><strong>تطوير مهاراتك<br>بأسلوبك الخاص</strong><div class="progress-line"><i></i></div><span>68% من المسار مكتمل</span></div>
+            <div class="floating-pill pill-top">✦ تعلّم مستمر</div><div class="floating-pill pill-bottom">✓ إنجاز جديد</div>
         </div>
-    </div>
+    </section>
 
-    <!-- التصنيفات -->
-    <h2 style="text-align:center;font-size:1.8rem;font-weight:900;margin-bottom:24px">تصنيفات الدورات</h2>
-    <div class="grid grid-4" style="margin-bottom:50px">
-        <?php foreach ($categories as $cat): ?>
-            <a href="courses.php?category=<?= $cat['id'] ?>" class="course-card" style="text-align:center;padding:30px 20px">
-                <div style="font-size:3rem;margin-bottom:10px"><?= $cat['icon'] ?></div>
-                <div style="font-weight:800"><?= clean($cat['name']) ?></div>
-            </a>
-        <?php endforeach; ?>
-    </div>
+    <section class="trust-strip"><div class="container trust-inner"><span>مصمم للمتعلمين الطموحين</span><div><b>تعلّم عملي</b><b>محتوى عربي</b><b>تقدّم واضح</b><b>مجتمع داعم</b></div></div></section>
 
-    <!-- الدورات المميزة -->
-    <h2 style="text-align:center;font-size:1.8rem;font-weight:900;margin-bottom:24px">أحدث الدورات</h2>
-    <?php if (empty($courses)): ?>
-        <div class="empty">
-            <div class="icon">📚</div>
-            <p>لا توجد دورات بعد</p>
-        </div>
-    <?php else: ?>
-        <div class="grid grid-3">
-            <?php foreach ($courses as $c): ?>
-                <div class="course-card">
-                    <div class="course-img">
-                        <?php if ($c['image']): ?>
-                            <img src="<?= SITE_URL ?>/uploads/courses/<?= $c['image'] ?>" alt="<?= clean($c['title']) ?>">
-                        <?php else: ?>
-                            📚
-                        <?php endif; ?>
-                    </div>
-                    <div class="course-body">
-                        <span class="badge badge-primary"><?= clean($c['cat_name'] ?? 'دورة') ?></span>
-                        <h3 class="course-title"><?= clean($c['title']) ?></h3>
-                        <div class="course-meta">
-                            <span>⏱ <?= $c['duration_hours'] ?> ساعة</span>
-                            <span>📊 <?= levelName($c['level']) ?></span>
-                        </div>
-                        <div class="course-price"><?= formatPrice($c['price']) ?></div>
-                        <a href="course.php?id=<?= $c['id'] ?>" class="btn btn-primary btn-block">التفاصيل</a>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    <?php endif; ?>
+    <section class="container home-section category-section"><div class="section-heading"><div><span class="eyebrow">EXPLORE YOUR PATH</span><h2>ماذا تريد أن تتعلم؟</h2></div><a href="courses.php">كل التصنيفات <span>←</span></a></div><div class="category-grid"><?php foreach ($categories as $cat): ?><a href="courses.php?category=<?= $cat['id'] ?>" class="category-tile"><span class="category-icon"><?= clean($cat['icon']) ?></span><span><strong><?= clean($cat['name']) ?></strong><small><?= clean($cat['description'] ?? 'ابدأ التعلم الآن') ?></small></span><b>↗</b></a><?php endforeach; ?></div></section>
 
-    <div style="text-align:center;margin-top:40px;margin-bottom:40px">
-        <a href="courses.php" class="btn btn-lg btn-primary">عرض كل الدورات ←</a>
-    </div>
+    <section class="container home-section courses-section"><div class="section-heading"><div><span class="eyebrow">CURATED FOR YOU</span><h2>دورات تفتح لك آفاقاً جديدة</h2></div><a href="courses.php">عرض الكل <span>←</span></a></div><?php if ($courses): ?><div class="modern-course-grid"><?php foreach ($courses as $c): ?><article class="modern-course-card"><div class="modern-course-cover"><?php if (!empty($c['image'])): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($c['image']) ?>" alt="<?= clean($c['title']) ?>"><?php else: ?><span>✦</span><?php endif; ?><label><?= clean($c['cat_name'] ?? 'دورة') ?></label></div><div class="modern-course-body"><h3><?= clean($c['title']) ?></h3><div class="modern-meta"><span>◷ <?= (int)$c['duration_hours'] ?> ساعة</span><span>◈ <?= levelName($c['level']) ?></span></div><div class="modern-course-foot"><strong><?= formatPrice($c['price']) ?></strong><a href="course.php?id=<?= (int)$c['id'] ?>">التفاصيل <span>←</span></a></div></div></article><?php endforeach; ?></div><?php endif; ?></section>
 
+    <section class="container final-cta"><div><span class="eyebrow">YOUR NEXT CHAPTER</span><h2>جاهز تبدأ النسخة الأفضل منك؟</h2><p>خطوة واحدة تفصلك عن مهارة جديدة وفرصة أكبر.</p></div><a href="courses.php" class="btn btn-primary btn-lg">ابدأ رحلة التعلم <span>←</span></a></section>
 </div>
 
 <?php require_once 'includes/footer.php'; ?>
