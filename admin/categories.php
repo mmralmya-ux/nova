@@ -25,15 +25,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $description = clean($_POST['description'] ?? '');
     $icon = clean($_POST['icon'] ?? '📚');
     $id = (int)($_POST['id'] ?? 0);
+    $image = $editing['image'] ?? null;
+    if ($id > 0) {
+        $current = $pdo->prepare("SELECT image FROM categories WHERE id=?");
+        $current->execute([$id]);
+        $image = $current->fetchColumn();
+    }
+    if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/categories/');
     
     if ($name !== '') {
         if ($id > 0) {
-            $pdo->prepare("UPDATE categories SET name=?, description=?, icon=? WHERE id=?")
-                ->execute([$name, $description, $icon, $id]);
+            $pdo->prepare("UPDATE categories SET name=?, description=?, icon=?, image=? WHERE id=?")
+                ->execute([$name, $description, $icon, $image, $id]);
             setFlash('success', 'تم تحديث التصنيف');
         } else {
-            $pdo->prepare("INSERT INTO categories (name, description, icon) VALUES (?, ?, ?)")
-                ->execute([$name, $description, $icon]);
+            $pdo->prepare("INSERT INTO categories (name, description, icon, image) VALUES (?, ?, ?, ?)")
+                ->execute([$name, $description, $icon, $image]);
             setFlash('success', 'تم إضافة التصنيف');
         }
         redirect(SITE_URL . '/admin/categories.php');
@@ -48,7 +55,7 @@ require_once 'includes/header.php';
 
 <div class="card" style="margin-bottom:24px">
     <h2 style="margin-bottom:18px"><?= $editing ? '✏️ تعديل تصنيف' : '➕ إضافة تصنيف' ?></h2>
-    <form method="POST">
+    <form method="POST" enctype="multipart/form-data">
         <input type="hidden" name="id" value="<?= $editing['id'] ?? 0 ?>">
         <div class="grid grid-3">
             <div class="form-group">
@@ -63,6 +70,11 @@ require_once 'includes/header.php';
                 <label class="form-label">الوصف</label>
                 <input type="text" name="description" class="form-input" value="<?= $editing['description'] ?? '' ?>">
             </div>
+            <div class="form-group">
+                <label class="form-label">صورة القسم</label>
+                <input type="file" name="image" class="form-input" accept="image/jpeg,image/png,image/webp">
+                <small style="color:var(--muted)">صورة أفقية واضحة، الحد الأقصى 2MB.</small>
+            </div>
         </div>
         <div style="display:flex;gap:10px">
             <button type="submit" class="btn btn-primary">💾 <?= $editing ? 'حفظ' : 'إضافة' ?></button>
@@ -76,13 +88,13 @@ require_once 'includes/header.php';
     <div class="table-wrap">
         <table>
             <thead>
-                <tr><th>ID</th><th>الأيقونة</th><th>الاسم</th><th>الوصف</th><th>إجراءات</th></tr>
+                <tr><th>ID</th><th>الصورة</th><th>الاسم</th><th>الوصف</th><th>إجراءات</th></tr>
             </thead>
             <tbody>
                 <?php foreach ($categories as $c): ?>
                     <tr>
                         <td><?= $c['id'] ?></td>
-                        <td style="font-size:1.5rem"><?= $c['icon'] ?></td>
+                        <td><?php if (!empty($c['image'])): ?><img class="category-admin-thumb" src="<?= SITE_URL ?>/uploads/categories/<?= rawurlencode($c['image']) ?>" alt=""><?php else: ?><span style="font-size:1.5rem"><?= $c['icon'] ?></span><?php endif; ?></td>
                         <td><strong><?= clean($c['name']) ?></strong></td>
                         <td><?= clean($c['description'] ?? '-') ?></td>
                         <td>
