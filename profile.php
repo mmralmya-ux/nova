@@ -33,13 +33,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $errors['password'] = 'كلمة المرور يجب أن تكون 8 أحرف';
             } else {
                 $hash = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=?, image=?, password=? WHERE id=?");
+                $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birth_date=?, image=?, password=? WHERE id=?");
                 $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $image, $hash, $user['id']]);
             }
         }
         
         if (empty($errors)) {
-            $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birthdate=?, image=? WHERE id=?");
+            $stmt = $pdo->prepare("UPDATE users SET full_name=?, phone=?, city=?, gender=?, birth_date=?, image=? WHERE id=?");
             $stmt->execute([$full_name, $phone, $city, $gender, $birthdate ?: null, $image, $user['id']]);
             
             $_SESSION['user_name'] = $full_name;
@@ -100,7 +100,7 @@ require_once 'includes/header.php';
 
                 <div class="form-group">
                     <label class="form-label">تاريخ الميلاد</label>
-                    <input type="date" name="birthdate" class="form-input" value="<?= $user['birthdate'] ?>">
+                    <input type="date" name="birthdate" class="form-input" value="<?= clean($user['birth_date'] ?? '') ?>">
                 </div>
 
                 <div class="form-group">

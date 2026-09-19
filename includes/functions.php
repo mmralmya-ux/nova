@@ -37,10 +37,13 @@ function uploadImage($file, $targetDir) {
     if ($file['size'] > 2 * 1024 * 1024) return null;
     
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowed = ['jpg', 'jpeg', 'png', 'webp'];
-    if (!in_array($ext, $allowed)) return null;
-    
-    $filename = uniqid('img_') . '.' . $ext;
+    $allowed = ['jpg' => 'image/jpeg', 'jpeg' => 'image/jpeg', 'png' => 'image/png', 'webp' => 'image/webp'];
+    if (!isset($allowed[$ext]) || !is_uploaded_file($file['tmp_name'])) return null;
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    if ($mime !== $allowed[$ext] || @getimagesize($file['tmp_name']) === false) return null;
+    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+
+    $filename = bin2hex(random_bytes(12)) . '.' . $ext;
     if (!move_uploaded_file($file['tmp_name'], $targetDir . $filename)) return null;
     return $filename;
 }
@@ -49,8 +52,10 @@ function uploadVideo($file, $targetDir) {
     if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) return null;
     if ($file['size'] > 50 * 1024 * 1024) return null;
     $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-    $allowed = ['mp4', 'webm', 'ogg'];
-    if (!in_array($ext, $allowed, true)) return null;
+    $allowed = ['mp4' => 'video/mp4', 'webm' => 'video/webm', 'ogg' => 'video/ogg'];
+    if (!isset($allowed[$ext]) || !is_uploaded_file($file['tmp_name'])) return null;
+    $mime = (new finfo(FILEINFO_MIME_TYPE))->file($file['tmp_name']);
+    if ($mime !== $allowed[$ext]) return null;
     if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
     $filename = bin2hex(random_bytes(12)) . '.' . $ext;
     if (!move_uploaded_file($file['tmp_name'], $targetDir . $filename)) return null;
