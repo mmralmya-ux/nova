@@ -79,7 +79,6 @@ nova/
 ├── assets/css/            ملفات التصميم
 ├── uploads/               صور ووسائط المستخدمين والدورات
 ├── ACADEMIC-SUBMISSION.md مصفوفة مطابقة المتطلبات
-└── NOVA-discussion-guide-ar.md دليل المناقشة
 ```
 
 ### مخطط قاعدة البيانات
