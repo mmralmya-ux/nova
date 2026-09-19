@@ -1,75 +1,10 @@
 <?php
-define('NOVA_APP', true);
-require_once 'includes/config.php';
-require_once 'includes/db.php';
-require_once 'includes/functions.php';
-require_once 'includes/auth.php';
-
-requireLogin();
-
-$user = currentUser();
-if (!$user) {
-    logout();
-    redirect(SITE_URL . '/login.php');
-}
-
-// إحصائيات
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ?");
-$stmt->execute([$user['id']]);
-$enrollCount = $stmt->fetchColumn();
-
-$stmt = $pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id = ? AND status = 'completed'");
-$stmt->execute([$user['id']]);
-$completedCount = $stmt->fetchColumn();
-
-$pageTitle = 'لوحة التحكم — ' . SITE_NAME;
-require_once 'includes/header.php';
+define('NOVA_APP', true); require_once 'includes/config.php'; require_once 'includes/db.php'; require_once 'includes/functions.php'; require_once 'includes/auth.php';
+requireLogin(); $user = currentUser(); if (!$user) { logout(); redirect(SITE_URL . '/login.php'); }
+$stmt=$pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id=?"); $stmt->execute([$user['id']]); $enrollCount=$stmt->fetchColumn();
+$stmt=$pdo->prepare("SELECT COUNT(*) FROM enrollments WHERE user_id=? AND status='completed'"); $stmt->execute([$user['id']]); $completedCount=$stmt->fetchColumn();
+$stmt=$pdo->prepare("SELECT c.title,c.image,e.status FROM enrollments e JOIN courses c ON c.id=e.course_id WHERE e.user_id=? ORDER BY e.created_at DESC LIMIT 3"); $stmt->execute([$user['id']]); $recentCourses=$stmt->fetchAll();
+$pageTitle='لوحة التعلم — '.SITE_NAME; require_once 'includes/header.php';
 ?>
-
-<div class="container">
-    <div class="dash-grid">
-        <aside class="dash-side">
-            <h3 style="margin-bottom:14px;font-weight:900">حسابي</h3>
-            <a href="dashboard.php" class="active">📊 نظرة عامة</a>
-            <a href="my-courses.php">📚 دوراتي</a>
-            <a href="courses.php">🔍 تصفح الدورات</a>
-            <a href="profile.php">👤 الملف الشخصي</a>
-            <a href="logout.php" style="color:var(--danger)">🚪 تسجيل الخروج</a>
-        </aside>
-
-        <div class="dash-content">
-            <h2 style="margin-bottom:8px">مرحباً، <?= clean($user['full_name']) ?> 👋</h2>
-            <p style="color:var(--text-2);margin-bottom:24px">إليك ملخص حسابك</p>
-
-            <div class="grid grid-3" style="margin-bottom:30px">
-                <div class="stat">
-                    <div class="num"><?= $enrollCount ?></div>
-                    <div class="lbl">الدورات المسجلة</div>
-                </div>
-                <div class="stat">
-                    <div class="num"><?= $completedCount ?></div>
-                    <div class="lbl">الدورات المكتملة</div>
-                </div>
-                <div class="stat">
-                    <div class="num"><?= date('Y') ?></div>
-                    <div class="lbl">عضو منذ <?= date('Y', strtotime($user['created_at'])) ?></div>
-                </div>
-            </div>
-
-            <h3 style="margin-bottom:16px;font-weight:800">⚡ إجراءات سريعة</h3>
-            <div style="display:flex;gap:12px;flex-wrap:wrap">
-                <a href="courses.php" class="btn btn-primary">🔍 تصفح الدورات</a>
-                <a href="my-courses.php" class="btn btn-outline">📚 دوراتي</a>
-                <a href="profile.php" class="btn btn-outline">👤 الملف الشخصي</a>
-            </div>
-
-            <?php if (isAdmin()): ?>
-                <div class="alert alert-info" style="margin-top:26px">
-                    <div>⚙️ أنت مشرف! <a href="admin/index.php" style="font-weight:800">اذهب للوحة التحكم الكاملة</a></div>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
-</div>
-
+<div class="container learner-shell"><div class="learner-grid"><aside class="learner-nav"><div class="learner-nav-head"><span>✦</span><div><strong>مساحة التعلم</strong><small>NOVA LEARNING</small></div></div><nav><a href="dashboard.php" class="active"><i>⌂</i> نظرة عامة</a><a href="my-courses.php"><i>▣</i> دوراتي</a><a href="courses.php"><i>＋</i> اكتشف الدورات</a><a href="profile.php"><i>◉</i> ملفي الشخصي</a></nav><div class="learner-nav-bottom"><a href="logout.php"><i>↪</i> تسجيل الخروج</a></div></aside><main class="learner-main"><div class="learner-topbar"><div><span class="v2-overline">LEARNING DASHBOARD</span><h1>مرحباً، <?= clean($user['full_name']) ?> <span>✦</span></h1><p>استمر في بناء مستقبلك، خطوة تعلم واحدة في كل مرة.</p></div><a href="profile.php" class="learner-avatar"><?= mb_substr($user['full_name'],0,1) ?></a></div><section class="learner-banner"><div><span>مساحتك الخاصة للتقدم</span><h2>كل إنجاز صغير<br><em>يصنع فرقاً كبيراً.</em></h2><a href="courses.php" class="btn btn-primary">تابع التعلم <b>←</b></a></div><div class="banner-ring"><strong><?= $enrollCount ? '68' : '0' ?><small>%</small></strong><span>متوسط تقدمك</span></div></section><div class="learner-stats"><div><span class="stat-icon purple">▣</span><strong><?= $enrollCount ?></strong><small>الدورات المسجلة</small></div><div><span class="stat-icon pink">✓</span><strong><?= $completedCount ?></strong><small>الدورات المكتملة</small></div><div><span class="stat-icon gold">✦</span><strong><?= date('Y',strtotime($user['created_at'])) ?></strong><small>سنة الانضمام</small></div></div><section class="learner-courses"><div class="learner-section-head"><div><span class="v2-overline">CONTINUE LEARNING</span><h2>تابع من حيث توقفت</h2></div><a href="my-courses.php">كل دوراتي ←</a></div><?php if ($recentCourses): ?><div class="learner-course-list"><?php foreach($recentCourses as $rc): ?><a href="my-courses.php" class="learner-course-item"><div class="learner-course-thumb"><?php if($rc['image']): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($rc['image']) ?>" alt=""><?php else: ?>✦<?php endif; ?></div><div><strong><?= clean($rc['title']) ?></strong><small><?= $rc['status']==='completed'?'مكتملة':'مسجلة للتعلم' ?></small><div class="mini-progress"><i style="width:<?= $rc['status']==='completed'?100:68 ?>%"></i></div></div><b>←</b></a><?php endforeach; ?></div><?php else: ?><div class="learner-empty">لم تسجل في دورة بعد — <a href="courses.php">اكتشف الدورات الآن</a></div><?php endif; ?></section></main></div></div>
 <?php require_once 'includes/footer.php'; ?>

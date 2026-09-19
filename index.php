@@ -1,39 +1,16 @@
 <?php
 define('NOVA_APP', true);
-require_once 'includes/config.php';
-require_once 'includes/db.php';
-require_once 'includes/functions.php';
-require_once 'includes/auth.php';
-
-$courses = $pdo->query("SELECT c.*, cat.name AS cat_name FROM courses c LEFT JOIN categories cat ON cat.id = c.category_id WHERE c.is_active = 1 ORDER BY c.id DESC LIMIT 6")->fetchAll();
+require_once 'includes/config.php'; require_once 'includes/db.php'; require_once 'includes/functions.php'; require_once 'includes/auth.php';
+$courses = $pdo->query("SELECT c.*, cat.name AS cat_name FROM courses c LEFT JOIN categories cat ON cat.id = c.category_id WHERE c.is_active = 1 ORDER BY c.id DESC LIMIT 3")->fetchAll();
 $categories = $pdo->query("SELECT * FROM categories LIMIT 4")->fetchAll();
-$pageTitle = 'تعلّم بذكاء — ' . SITE_NAME;
+$pageTitle = 'مستقبل تعلمك يبدأ هنا — ' . SITE_NAME;
 require_once 'includes/header.php';
 ?>
-
-<div class="nova-home">
-    <section class="nova-hero container">
-        <div class="hero-copy">
-            <span class="hero-kicker"><i></i> منصة تعلم عربية بطموح عالمي</span>
-            <h1>المهارة التي تبحث عنها<br><em>تبدأ من هنا.</em></h1>
-            <p>تعلّم من دورات عملية صُممت لتمنحك معرفة قابلة للتطبيق، وتبني لك مستقبلاً أقوى خطوة بعد خطوة.</p>
-            <div class="hero-cta"><a href="courses.php" class="btn btn-primary btn-lg">استكشف الدورات <span>←</span></a><?php if (!isLoggedIn()): ?><a href="register.php" class="hero-link">ابدأ مجاناً <span>↗</span></a><?php endif; ?></div>
-            <div class="hero-proof"><div class="avatar-stack"><b>ن</b><b>م</b><b>س</b></div><span><strong>+1,200</strong> متعلم بدأ رحلته معنا</span></div>
-        </div>
-        <div class="hero-visual" aria-hidden="true">
-            <div class="hero-glow"></div><div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
-            <div class="learning-card"><div class="learning-icon">✦</div><small>مسارك التعليمي</small><strong>تطوير مهاراتك<br>بأسلوبك الخاص</strong><div class="progress-line"><i></i></div><span>68% من المسار مكتمل</span></div>
-            <div class="floating-pill pill-top">✦ تعلّم مستمر</div><div class="floating-pill pill-bottom">✓ إنجاز جديد</div>
-        </div>
-    </section>
-
-    <section class="trust-strip"><div class="container trust-inner"><span>مصمم للمتعلمين الطموحين</span><div><b>تعلّم عملي</b><b>محتوى عربي</b><b>تقدّم واضح</b><b>مجتمع داعم</b></div></div></section>
-
-    <section class="container home-section category-section"><div class="section-heading"><div><span class="eyebrow">EXPLORE YOUR PATH</span><h2>ماذا تريد أن تتعلم؟</h2></div><a href="courses.php">كل التصنيفات <span>←</span></a></div><div class="category-grid"><?php foreach ($categories as $cat): ?><a href="courses.php?category=<?= $cat['id'] ?>" class="category-tile"><?php if (!empty($cat['image'])): ?><img class="category-cover" src="<?= SITE_URL ?>/uploads/categories/<?= rawurlencode($cat['image']) ?>" alt="<?= clean($cat['name']) ?>"><?php else: ?><span class="category-icon"><?= clean($cat['icon']) ?></span><?php endif; ?><span class="category-copy"><strong><?= clean($cat['name']) ?></strong><small><?= clean($cat['description'] ?? 'ابدأ التعلم الآن') ?></small></span><b>↗</b></a><?php endforeach; ?></div></section>
-
-    <section class="container home-section courses-section"><div class="section-heading"><div><span class="eyebrow">CURATED FOR YOU</span><h2>دورات تفتح لك آفاقاً جديدة</h2></div><a href="courses.php">عرض الكل <span>←</span></a></div><?php if ($courses): ?><div class="modern-course-grid"><?php foreach ($courses as $c): ?><article class="modern-course-card"><div class="modern-course-cover"><?php if (!empty($c['image'])): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($c['image']) ?>" alt="<?= clean($c['title']) ?>"><?php else: ?><span>✦</span><?php endif; ?><label><?= clean($c['cat_name'] ?? 'دورة') ?></label></div><div class="modern-course-body"><h3><?= clean($c['title']) ?></h3><div class="modern-meta"><span>◷ <?= (int)$c['duration_hours'] ?> ساعة</span><span>◈ <?= levelName($c['level']) ?></span></div><div class="modern-course-foot"><strong><?= formatPrice($c['price']) ?></strong><a href="course.php?id=<?= (int)$c['id'] ?>">التفاصيل <span>←</span></a></div></div></article><?php endforeach; ?></div><?php endif; ?></section>
-
-    <section class="container final-cta"><div><span class="eyebrow">YOUR NEXT CHAPTER</span><h2>جاهز تبدأ النسخة الأفضل منك؟</h2><p>خطوة واحدة تفصلك عن مهارة جديدة وفرصة أكبر.</p></div><a href="courses.php" class="btn btn-primary btn-lg">ابدأ رحلة التعلم <span>←</span></a></section>
+<div class="nova-home nova-home-v2">
+<section class="v2-hero"><div class="container v2-hero-grid"><div class="v2-hero-copy"><span class="v2-label"><i></i> تعلّم بشكل مختلف</span><h1>ابنِ مهارتك.<br><span>اصنع مستقبلك.</span></h1><p>منصة تعليمية عربية تمنحك المعرفة والأدوات والمسار الواضح لتنتقل من الفضول إلى الاحتراف.</p><div class="v2-actions"><a href="courses.php" class="btn btn-primary btn-lg">ابدأ التعلم الآن <b>←</b></a><a href="about.php" class="v2-watch"><span>▶</span> اكتشف NOVA</a></div><div class="v2-rating"><strong>4.9</strong><span class="stars">★★★★★</span><small>تقييم أكثر من 1,200 متعلم</small></div></div><div class="v2-hero-art"><div class="art-grid"></div><div class="art-orb orb-one"></div><div class="art-orb orb-two"></div><div class="art-window"><div class="window-bar"><i></i><i></i><i></i><span>مساري التعليمي</span></div><div class="window-content"><small>مرحباً بك في NOVA</small><h3>تعلّم. طبّق.<br><em>تقدّم.</em></h3><div class="window-stat"><span>تقدمك هذا الأسبوع</span><b>72%</b></div><div class="window-progress"><i></i></div><div class="window-chips"><b>UX Design</b><b>Web Dev</b><b>+3</b></div></div></div><div class="art-badge badge-a">✦ محتوى عملي</div><div class="art-badge badge-b">✓ إنجاز جديد</div></div></div></section>
+<section class="v2-metrics"><div class="container metrics-grid"><div><strong>+1,200</strong><span>متعلم نشط</span></div><div><strong>+24</strong><span>ساعة محتوى عملي</span></div><div><strong>4</strong><span>مسارات متخصصة</span></div><div><strong>100%</strong><span>تجربة عربية</span></div></div></section>
+<section class="container v2-section"><div class="v2-section-head"><div><span class="v2-overline">LEARN WITH PURPOSE</span><h2>اختر المسار الذي يشبه طموحك</h2></div><a href="courses.php">استكشف كل المسارات <b>←</b></a></div><div class="v2-path-grid"><?php foreach ($categories as $cat): ?><a class="v2-path" href="courses.php?category=<?= (int)$cat['id'] ?>" style="--path-image:url('<?= !empty($cat['image']) ? SITE_URL . '/uploads/categories/' . rawurlencode($cat['image']) : '' ?>')"><div class="path-overlay"></div><div class="path-content"><span><?= clean($cat['icon']) ?></span><h3><?= clean($cat['name']) ?></h3><p><?= clean($cat['description'] ?? 'ابدأ رحلتك التعليمية') ?></p><b>استكشف المسار ↗</b></div></a><?php endforeach; ?></div></section>
+<section class="container v2-section v2-courses"><div class="v2-section-head"><div><span class="v2-overline">CURATED LEARNING</span><h2>دورات مصممة لتصنع فرقاً</h2></div><a href="courses.php">رؤية جميع الدورات <b>←</b></a></div><div class="v2-course-row"><?php foreach ($courses as $c): ?><a href="course.php?id=<?= (int)$c['id'] ?>" class="v2-course"><div class="v2-course-image"><?php if (!empty($c['image'])): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($c['image']) ?>" alt="<?= clean($c['title']) ?>"><?php endif; ?><span><?= clean($c['cat_name'] ?? 'دورة') ?></span></div><div class="v2-course-body"><h3><?= clean($c['title']) ?></h3><small>◷ <?= (int)$c['duration_hours'] ?> ساعة <i>•</i> <?= levelName($c['level']) ?></small><div><strong><?= formatPrice($c['price']) ?></strong><b>التفاصيل ←</b></div></div></a><?php endforeach; ?></div></section>
+<section class="container v2-cta"><div><span class="v2-overline">YOUR NEXT MOVE</span><h2>المستقبل لا ينتظر.<br>ابدأ أنت.</h2><p>حوّل وقتك إلى معرفة، ومعرفتك إلى فرصة.</p></div><a href="register.php" class="btn btn-primary btn-lg">أنشئ حسابك مجاناً <b>←</b></a></section>
 </div>
-
 <?php require_once 'includes/footer.php'; ?>
