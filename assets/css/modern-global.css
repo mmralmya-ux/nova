@@ -42,3 +42,9 @@ html.theme-dark .empty,html.theme-dark .auth-head p{color:var(--theme-text-2)}
 .nova-footer h4{display:flex;align-items:center;gap:8px}
 .nova-footer h4:before{content:"";width:4px;height:18px;border-radius:9px;background:var(--grad);display:inline-block}
 @media(max-width:768px){.theme-toggle{min-height:34px;padding:7px 9px;font-size:.7rem}.theme-label{display:none}.nova-footer .footer-grid>div:not(.footer-brand-block){padding-inline-start:0;border-inline-start:0}.nova-footer{padding-top:42px}}
+
+/* Fixed navigation: remains visible while scrolling */
+.site-header{position:fixed;inset:0 0 auto 0;width:100%;z-index:1000;box-shadow:0 8px 28px rgba(20,18,70,.08)}
+.site-header + .site-main{padding-top:72px}
+html.theme-dark .site-header{box-shadow:0 8px 28px rgba(0,0,0,.25)}
+@media(max-width:768px){.site-header + .site-main{padding-top:62px}.site-header .header-inner{min-height:62px}}
