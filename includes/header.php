@@ -7,6 +7,12 @@ $flash = getFlash();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#6366f1">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="icon" href="<?= SITE_URL ?>/assets/icons/nova-icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="<?= SITE_URL ?>/assets/icons/nova-icon.svg">
+<link rel="manifest" href="<?= SITE_URL ?>/site.webmanifest">
 <title><?= $pageTitle ?? SITE_NAME ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css?v=20260919-1909">
