@@ -11,6 +11,7 @@ $flash = getFlash();
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css?v=20260919-1909">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/modern-home.css?v=20260919-1924">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/modern-global.css?v=20260919-1932">
 </head>
 <body>
 
