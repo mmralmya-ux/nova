@@ -12,3 +12,33 @@
 .brand-icon{flex:0 0 43px}.admin-brand-mark{background-color:transparent}
 @media(max-width:768px){.header-inner{padding:10px 14px;gap:10px}.brand{gap:8px}.brand-icon{width:39px;height:39px;flex-basis:39px;border-radius:12px}.brand-text{font-size:1rem}.brand-text small{font-size:.52rem;letter-spacing:1.5px}.header-actions{gap:5px;margin-inline-start:auto}.header-actions .btn{padding:8px 10px;min-height:34px;font-size:.76rem}}
 @media(max-width:430px){.brand-text small{display:none}.header-actions .btn-outline{padding-inline:8px}}
+
+/* NOVA design system: accessible theme and refined surfaces */
+:root{--theme-bg:#f6f8fc;--theme-surface:#ffffff;--theme-surface-2:#f1f5f9;--theme-text:#0f172a;--theme-text-2:#475569;--theme-muted:#94a3b8;--theme-border:#e5e9f2;--theme-glow:rgba(99,102,241,.12)}
+html.theme-dark{--theme-bg:#0d1020;--theme-surface:#151a2e;--theme-surface-2:#1c233a;--theme-text:#f1f5ff;--theme-text-2:#b6c0d8;--theme-muted:#8490ad;--theme-border:#2d3652;--theme-glow:rgba(139,92,246,.2);color-scheme:dark}
+html.theme-dark body{background:var(--theme-bg);color:var(--theme-text)}
+html.theme-dark .site-header{background:rgba(13,16,32,.88);border-color:var(--theme-border)}
+html.theme-dark .site-header .main-nav a,html.theme-dark .brand{color:var(--theme-text-2)}
+html.theme-dark .btn-outline{background:var(--theme-surface);border-color:var(--theme-border);color:var(--theme-text)}
+html.theme-dark .btn-outline:hover{background:var(--theme-surface-2);color:#c4b5fd}
+html.theme-dark .card,html.theme-dark .course-card,html.theme-dark .auth-card,html.theme-dark .dash-content,html.theme-dark .dash-side,html.theme-dark table{background:var(--theme-surface);border-color:var(--theme-border);color:var(--theme-text)}
+html.theme-dark .course-title,html.theme-dark .card h2,html.theme-dark .card h3,html.theme-dark .dash-content h2{color:var(--theme-text)}
+html.theme-dark .form-input,html.theme-dark .form-select,html.theme-dark .form-textarea{background:var(--theme-surface-2);border-color:var(--theme-border);color:var(--theme-text)}
+html.theme-dark .form-input:focus,html.theme-dark .form-select:focus,html.theme-dark .form-textarea:focus{background:var(--theme-surface);box-shadow:0 0 0 4px var(--theme-glow)}
+html.theme-dark th,html.theme-dark tr:hover td{background:var(--theme-surface-2)}
+html.theme-dark th,html.theme-dark td{border-color:var(--theme-border);color:var(--theme-text-2)}
+html.theme-dark .nova-footer{background:#101528;border-color:var(--theme-border)}
+html.theme-dark .nova-footer h4,html.theme-dark .nova-footer .footer-brand{color:var(--theme-text)!important}
+html.theme-dark .nova-footer p,html.theme-dark .nova-footer a{color:var(--theme-text-2)}
+html.theme-dark .nova-footer .footer-bottom{border-color:var(--theme-border);color:var(--theme-muted)}
+html.theme-dark .empty,html.theme-dark .auth-head p{color:var(--theme-text-2)}
+.theme-toggle{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:38px;padding:8px 12px;border:1px solid var(--border);border-radius:12px;background:var(--surface);color:var(--text-2);font:inherit;font-size:.78rem;font-weight:800;cursor:pointer;transition:.22s}
+.theme-toggle:hover{border-color:var(--primary);color:var(--primary);transform:translateY(-1px);box-shadow:0 6px 14px rgba(99,102,241,.12)}
+.theme-toggle span:first-child{font-size:1.1rem;line-height:1}
+.nova-footer{position:relative;overflow:hidden}
+.nova-footer:before{content:"";position:absolute;inset:auto -80px -160px auto;width:360px;height:360px;border:1px solid rgba(139,92,246,.14);border-radius:50%;pointer-events:none}
+.nova-footer .footer-grid,.nova-footer .footer-bottom{position:relative;z-index:1}
+.nova-footer .footer-grid>div:not(.footer-brand-block){padding-inline-start:16px;border-inline-start:1px solid var(--border)}
+.nova-footer h4{display:flex;align-items:center;gap:8px}
+.nova-footer h4:before{content:"";width:4px;height:18px;border-radius:9px;background:var(--grad);display:inline-block}
+@media(max-width:768px){.theme-toggle{min-height:34px;padding:7px 9px;font-size:.7rem}.theme-label{display:none}.nova-footer .footer-grid>div:not(.footer-brand-block){padding-inline-start:0;border-inline-start:0}.nova-footer{padding-top:42px}}

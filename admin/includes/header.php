@@ -17,8 +17,10 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
 <title><?= $pageTitle ?? 'لوحة التحكم — ' . SITE_NAME ?></title>
 <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css?v=20260919-1909">
+<link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/modern-global.css?v=20260919-2045">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/admin.css?v=20260919-1909">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/admin-modern.css?v=20260919-1924">
+<script src="<?= SITE_URL ?>/assets/js/theme.js?v=20260919-2045" defer></script>
 </head>
 <body>
 
@@ -43,7 +45,7 @@ $currentPage = basename($_SERVER['PHP_SELF'], '.php');
     <main class="admin-main">
         <div class="admin-top">
             <h1><?= $pageTitle ?? 'لوحة التحكم' ?></h1>
-            <div class="admin-user"><span class="admin-user-avatar">N</span><span><?= htmlspecialchars($_SESSION['user_name'] ?? 'المشرف') ?></span></div>
+            <div class="admin-top-actions"><button type="button" class="theme-toggle" data-theme-toggle aria-label="تفعيل الوضع الليلي" aria-pressed="false"><span aria-hidden="true">☾</span><span class="theme-label">ليلي</span></button><div class="admin-user"><span class="admin-user-avatar">N</span><span><?= htmlspecialchars($_SESSION['user_name'] ?? 'المشرف') ?></span></div></div>
         </div>
 
         <?php if ($flash): ?>

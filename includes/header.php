@@ -18,6 +18,7 @@ $flash = getFlash();
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/style.css?v=20260919-1909">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/modern-home.css?v=20260919-1924">
 <link rel="stylesheet" href="<?= SITE_URL ?>/assets/css/modern-global.css?v=20260919-1932">
+<script src="<?= SITE_URL ?>/assets/js/theme.js?v=20260919-2045" defer></script>
 </head>
 <body>
 
@@ -34,6 +35,7 @@ $flash = getFlash();
             <a href="<?= SITE_URL ?>/contact.php">تواصل معنا</a>
         </nav>
         <div class="header-actions">
+            <button type="button" class="theme-toggle" data-theme-toggle aria-label="تفعيل الوضع الليلي" aria-pressed="false"><span aria-hidden="true">☾</span><span class="theme-label">ليلي</span></button>
             <?php if (isLoggedIn()): ?>
                 <?php if (isAdmin()): ?>
                     <a href="<?= SITE_URL ?>/admin/index.php" class="btn btn-outline btn-sm">⚙️ لوحة التحكم</a>
