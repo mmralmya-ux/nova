@@ -5,6 +5,8 @@ require_once 'includes/db.php';
 require_once 'includes/functions.php';
 require_once 'includes/auth.php';
 
+$mediaVideoUrl = '';
+
 $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 if ($id <= 0) redirect(SITE_URL . '/courses.php');
 
@@ -17,6 +19,9 @@ $stmt = $pdo->prepare("SELECT c.*, cat.name AS cat_name, cat.icon AS cat_icon,
 $stmt->execute([$id]);
 $course = $stmt->fetch();
 if (!$course) redirect(SITE_URL . '/courses.php');
+$mediaVideoUrl = !empty($course['video_url']) && filter_var($course['video_url'], FILTER_VALIDATE_URL)
+    ? $course['video_url']
+    : (!empty($course['video_url']) ? SITE_URL . '/uploads/videos/' . rawurlencode($course['video_url']) : '');
 
 // هل المستخدم مسجل في هذه الدورة؟
 $isEnrolled = false;
@@ -48,7 +53,7 @@ require_once 'includes/header.php';
             <div class="course-img" style="border-radius:20px;height:320px;font-size:5rem;margin-bottom:20px">
                 <?php if (!empty($course['image'])): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($course['image']) ?>" alt="<?= clean($course['title']) ?>"><?php else: ?><?= $course['cat_icon'] ?? '📚' ?><?php endif; ?>
             </div>
-            <?php if (!empty($course['video_url'])): ?><div class="card media-card"><h3>فيديو تعريفي</h3><a class="btn btn-outline btn-block" href="<?= htmlspecialchars($course['video_url']) ?>" target="_blank" rel="noopener">▶ مشاهدة الفيديو</a></div><?php endif; ?>
+            <?php if ($mediaVideoUrl): ?><div class="card media-card"><h3>فيديو تعريفي</h3><video class="course-video" controls preload="metadata" src="<?= htmlspecialchars($mediaVideoUrl) ?>"></video></div><?php endif; ?>
             <div class="card" style="padding:20px">
                 <h4 style="margin-bottom:14px;font-weight:800">معلومات الدورة</h4>
                 <table style="min-width:auto">

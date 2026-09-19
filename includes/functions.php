@@ -45,6 +45,18 @@ function uploadImage($file, $targetDir) {
     return $filename;
 }
 
+function uploadVideo($file, $targetDir) {
+    if (!isset($file) || $file['error'] !== UPLOAD_ERR_OK) return null;
+    if ($file['size'] > 50 * 1024 * 1024) return null;
+    $ext = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+    $allowed = ['mp4', 'webm', 'ogg'];
+    if (!in_array($ext, $allowed, true)) return null;
+    if (!is_dir($targetDir)) mkdir($targetDir, 0755, true);
+    $filename = bin2hex(random_bytes(12)) . '.' . $ext;
+    if (!move_uploaded_file($file['tmp_name'], $targetDir . $filename)) return null;
+    return $filename;
+}
+
 // تنسيق السعر
 function formatPrice($price) {
     return number_format($price, 2) . ' ر.س';

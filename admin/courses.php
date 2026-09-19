@@ -35,6 +35,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $seats = (int)($_POST['seats'] ?? 30);
     $video_url = trim($_POST['video_url'] ?? '');
     if ($video_url !== '' && !filter_var($video_url, FILTER_VALIDATE_URL)) $errors[] = 'رابط الفيديو غير صحيح';
+    $video_file = null;
+    if (!empty($_FILES['video_file']['name'])) $video_file = uploadVideo($_FILES['video_file'], __DIR__ . '/../uploads/videos/');
     $id = (int)($_POST['id'] ?? 0);
     $image = null;
     
@@ -48,8 +50,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $current->execute([$id]);
             $image = $current->fetchColumn();
             if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
+            $video_value = $video_file ? $video_file : ($video_url ?: null);
             $stmt = $pdo->prepare("UPDATE courses SET title=?, description=?, category_id=?, instructor_id=?, price=?, duration_hours=?, level=?, seats=?, image=?, video_url=? WHERE id=?");
-            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $video_url ?: null, $id]);
+            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $video_value, $id]);
             setFlash('success', 'تم تحديث الدورة');
         } else {
             if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
@@ -140,6 +143,10 @@ require_once 'includes/header.php';
             <div class="form-group">
                 <label class="form-label">رابط فيديو تعريفي</label>
                 <input type="url" name="video_url" class="form-input" dir="ltr" value="<?= htmlspecialchars($editing['video_url'] ?? '') ?>" placeholder="https://www.youtube.com/watch?v=..."><small style="color:var(--muted)">يمكن استخدام رابط YouTube أو Vimeo أو ملف فيديو خارجي.</small>
+            </div>
+            <div class="form-group">
+                <label class="form-label">أو ارفع فيديو مباشرة</label>
+                <input type="file" name="video_file" class="form-input" accept="video/mp4,video/webm,video/ogg"><small style="color:var(--muted)">MP4 أو WEBM أو OGG — الحد الأقصى 50MB.</small>
             </div>
         </div>
         
