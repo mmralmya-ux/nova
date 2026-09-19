@@ -43,6 +43,62 @@ NOVA منصة تعليمية عربية مبنية بـ PHP وMySQL، تجمع �
   └── إدارة الرسائل
 ```
 
+### خطة التنفيذ المرحلية
+
+1. **التحليل والتصميم:** تحديد أدوار الزائر والمستخدم والمدير، وتصميم تجربة RTL وهوية NOVA البصرية.
+2. **الأساس البرمجي:** إعداد PHP وPDO والجلسات والاتصال الآمن بقاعدة MySQL.
+3. **الحسابات والصلاحيات:** التسجيل، الدخول، الخروج، الملف الشخصي، التفعيل، وحماية لوحة الإدارة.
+4. **إدارة المحتوى:** بناء عمليات الإضافة والتعديل والحذف للدورات والتصنيفات والمدربين والمستخدمين.
+5. **الوسائط وتجربة المستخدم:** رفع الصور والفيديو، البحث والتصفية، البطاقات المتجاوبة، ولوحات المتابعة.
+6. **الاختبار والنشر:** فحص المدخلات، الاستعلامات المجهزة، الجلسات، الروابط، HTTPS، والاستجابة على الشاشات المختلفة.
+
+### هيكل المشروع
+
+```text
+nova/
+├── index.php, about.php, contact.php
+├── courses.php, course.php, enroll.php
+├── register.php, login.php, logout.php
+├── dashboard.php, my-courses.php, profile.php
+├── admin/
+│   ├── index.php          لوحة الإحصاءات
+│   ├── users.php          المستخدمون والتفعيل والصلاحيات
+│   ├── courses.php        الدورات والصور والفيديو
+│   ├── categories.php     التصنيفات
+│   ├── instructors.php    المدربون
+│   ├── enrollments.php    التسجيلات
+│   └── messages.php       رسائل التواصل
+├── includes/
+│   ├── config.php         إعدادات البيئة والجلسة
+│   ├── db.php             اتصال PDO
+│   ├── auth.php           المصادقة والتحكم بالوصول
+│   ├── functions.php      التحقق والرفع والدوال العامة
+│   ├── header.php         رأس الموقع
+│   └── footer.php         تذييل الموقع
+├── database/schema.sql    الجداول والعلاقات
+├── assets/css/            ملفات التصميم
+├── uploads/               صور ووسائط المستخدمين والدورات
+├── ACADEMIC-SUBMISSION.md مصفوفة مطابقة المتطلبات
+└── NOVA-discussion-guide-ar.md دليل المناقشة
+```
+
+### مخطط قاعدة البيانات
+
+```text
+users (id PK, full_name, email UNIQUE, password, role, image, birth_date, is_active)
+  │ 1
+  └──────────────< enrollments >──────────────┐
+                 (user_id FK, course_id FK)   │
+                                               │ *
+categories (id PK) 1 ───────────────< courses >
+                                  (category_id FK, instructor_id FK)
+instructors (id PK) 1 ────────────────< courses
+
+messages (id PK, name, email, subject, message, is_read)
+```
+
+العلاقة بين `users` و`courses` هي علاقة متعدد إلى متعدد، وتمثلها `enrollments` مع قيد فريد يمنع تسجيل المستخدم في الدورة نفسها أكثر من مرة. أما `categories` و`instructors` فكل منهما يرتبط بعدة دورات.
+
 ## المكدس التقني
 
 - PHP تقليدي منظم إلى صفحات ووحدات مشتركة.
