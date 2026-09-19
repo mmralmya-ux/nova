@@ -46,8 +46,9 @@ require_once 'includes/header.php';
         <!-- الصورة والمعلومات الجانبية -->
         <div>
             <div class="course-img" style="border-radius:20px;height:320px;font-size:5rem;margin-bottom:20px">
-                <?= $course['cat_icon'] ?? '📚' ?>
+                <?php if (!empty($course['image'])): ?><img src="<?= SITE_URL ?>/uploads/courses/<?= rawurlencode($course['image']) ?>" alt="<?= clean($course['title']) ?>"><?php else: ?><?= $course['cat_icon'] ?? '📚' ?><?php endif; ?>
             </div>
+            <?php if (!empty($course['video_url'])): ?><div class="card media-card"><h3>فيديو تعريفي</h3><a class="btn btn-outline btn-block" href="<?= htmlspecialchars($course['video_url']) ?>" target="_blank" rel="noopener">▶ مشاهدة الفيديو</a></div><?php endif; ?>
             <div class="card" style="padding:20px">
                 <h4 style="margin-bottom:14px;font-weight:800">معلومات الدورة</h4>
                 <table style="min-width:auto">

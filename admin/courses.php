@@ -33,6 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $duration_hours = (int)($_POST['duration_hours'] ?? 0);
     $level = $_POST['level'] ?? 'beginner';
     $seats = (int)($_POST['seats'] ?? 30);
+    $video_url = trim($_POST['video_url'] ?? '');
+    if ($video_url !== '' && !filter_var($video_url, FILTER_VALIDATE_URL)) $errors[] = 'رابط الفيديو غير صحيح';
     $id = (int)($_POST['id'] ?? 0);
     $image = null;
     
@@ -46,13 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $current->execute([$id]);
             $image = $current->fetchColumn();
             if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
-            $stmt = $pdo->prepare("UPDATE courses SET title=?, description=?, category_id=?, instructor_id=?, price=?, duration_hours=?, level=?, seats=?, image=? WHERE id=?");
-            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $id]);
+            $stmt = $pdo->prepare("UPDATE courses SET title=?, description=?, category_id=?, instructor_id=?, price=?, duration_hours=?, level=?, seats=?, image=?, video_url=? WHERE id=?");
+            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $video_url ?: null, $id]);
             setFlash('success', 'تم تحديث الدورة');
         } else {
             if (!empty($_FILES['image']['name'])) $image = uploadImage($_FILES['image'], __DIR__ . '/../uploads/courses/');
-            $stmt = $pdo->prepare("INSERT INTO courses (title, description, category_id, instructor_id, price, duration_hours, level, seats, image) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image]);
+            $stmt = $pdo->prepare("INSERT INTO courses (title, description, category_id, instructor_id, price, duration_hours, level, seats, image, video_url) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            $stmt->execute([$title, $description, $category_id, $instructor_id, $price, $duration_hours, $level, $seats, $image, $video_url ?: null]);
             setFlash('success', 'تم إضافة الدورة');
         }
         redirect(SITE_URL . '/admin/courses.php');
@@ -134,6 +136,10 @@ require_once 'includes/header.php';
                 <label class="form-label">صورة الدورة</label>
                 <input type="file" name="image" class="form-input" accept="image/jpeg,image/png,image/webp">
                 <small style="color:var(--muted)">JPG أو PNG أو WEBP — الحد الأقصى 2MB</small>
+            </div>
+            <div class="form-group">
+                <label class="form-label">رابط فيديو تعريفي</label>
+                <input type="url" name="video_url" class="form-input" dir="ltr" value="<?= htmlspecialchars($editing['video_url'] ?? '') ?>" placeholder="https://www.youtube.com/watch?v=..."><small style="color:var(--muted)">يمكن استخدام رابط YouTube أو Vimeo أو ملف فيديو خارجي.</small>
             </div>
         </div>
         

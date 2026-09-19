@@ -42,6 +42,7 @@ CREATE TABLE IF NOT EXISTS courses (
   level ENUM('beginner','intermediate','advanced') NOT NULL DEFAULT 'beginner',
   seats INT UNSIGNED NOT NULL DEFAULT 30,
   image VARCHAR(255) NULL,
+  video_url VARCHAR(500) NULL,
   is_active TINYINT(1) NOT NULL DEFAULT 1,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   CONSTRAINT fk_courses_category FOREIGN KEY (category_id) REFERENCES categories(id) ON DELETE RESTRICT,
